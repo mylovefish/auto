@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ognice.dao.NoticeMapper">
+	<resultMap id="BaseResultMap" type="com.ognice.domain.Notice">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="desc" property="desc" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		`id`
+		,
+		`title`
+		,
+		`desc`
+		
+	</sql>
+	<select id="selectNoticeById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from `notice` where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="page" parameterType="com.ognice.controller.common.PageSearchParam" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from `notice` where 1=1
+		<if test="params!=null">
+		<if test="params.id !=null ">
+		AND `id` = #{params.id}
+		</if>
+		<if test="params.title !=null and params.title!=''">
+		 AND `title` like concat('%',#{params.title},'%')
+		</if>
+		<if test="params.desc !=null and params.desc!=''">
+		 AND `desc` like concat('%',#{params.desc},'%')
+		</if>
+		</if>
+		order by id desc
+		<if test="page!=null"> limit #{page},#{pagesize}
+		</if>
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Integer"> delete from `notice` where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"  parameterType="com.ognice.domain.Notice"> insert into `notice` (
+		`id`
+				,
+		`title`
+				,
+		`desc`
+				
+	) values (
+		#{id,jdbcType=INTEGER}
+				,
+		#{title,jdbcType=VARCHAR}
+				,
+		#{desc,jdbcType=VARCHAR}
+				
+	)
+	</insert>
+
+	<update id="update" parameterType="com.ognice.domain.Notice">
+		update `notice`
+		<set>
+		<if test="id != null and id!=''">
+		`id`= #{id,jdbcType=INTEGER},
+		</if>
+		<if test="title != null and title!=''">
+		`title`= #{title,jdbcType=VARCHAR},
+		</if>
+		<if test="desc != null and desc!=''">
+		`desc`= #{desc,jdbcType=VARCHAR},
+		</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>

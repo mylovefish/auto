@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ognice.dao.PreuserMapper">
+	<resultMap id="BaseResultMap" type="com.ognice.domain.Preuser">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="psw" property="psw" jdbcType="VARCHAR" />
+		<result column="apartmentid" property="apartmentid" jdbcType="INTEGER" />
+		<result column="jueseid" property="jueseid" jdbcType="INTEGER" />
+		<result column="juesename" property="juesename" jdbcType="VARCHAR" />
+		<result column="apartmentname" property="apartmentname" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		`id`
+		,
+		`username`
+		,
+		`name`
+		,
+		`psw`
+		,
+		`apartmentid`
+		,
+		`jueseid`
+		,
+		`juesename`
+		,
+		`apartmentname`
+		
+	</sql>
+	<select id="selectPreuserById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from `preuser` where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="page" parameterType="com.ognice.controller.common.PageSearchParam" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from `preuser` where 1=1
+		<if test="params!=null">
+		<if test="params.id !=null ">
+		AND `id` = #{params.id}
+		</if>
+		<if test="params.username !=null and params.username!=''">
+		 AND `username` like concat('%',#{params.username},'%')
+		</if>
+		<if test="params.name !=null and params.name!=''">
+		 AND `name` like concat('%',#{params.name},'%')
+		</if>
+		<if test="params.psw !=null and params.psw!=''">
+		 AND `psw` like concat('%',#{params.psw},'%')
+		</if>
+		<if test="params.apartmentid !=null ">
+		AND `apartmentid` = #{params.apartmentid}
+		</if>
+		<if test="params.jueseid !=null ">
+		AND `jueseid` = #{params.jueseid}
+		</if>
+		<if test="params.juesename !=null and params.juesename!=''">
+		 AND `juesename` like concat('%',#{params.juesename},'%')
+		</if>
+		<if test="params.apartmentname !=null and params.apartmentname!=''">
+		 AND `apartmentname` like concat('%',#{params.apartmentname},'%')
+		</if>
+		</if>
+		order by id desc
+		<if test="page!=null"> limit #{page},#{pagesize}
+		</if>
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Integer"> delete from `preuser` where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"  parameterType="com.ognice.domain.Preuser"> insert into `preuser` (
+		`id`
+				,
+		`username`
+				,
+		`name`
+				,
+		`psw`
+				,
+		`apartmentid`
+				,
+		`jueseid`
+				,
+		`juesename`
+				,
+		`apartmentname`
+				
+	) values (
+		#{id,jdbcType=INTEGER}
+				,
+		#{username,jdbcType=VARCHAR}
+				,
+		#{name,jdbcType=VARCHAR}
+				,
+		#{psw,jdbcType=VARCHAR}
+				,
+		#{apartmentid,jdbcType=INTEGER}
+				,
+		#{jueseid,jdbcType=INTEGER}
+				,
+		#{juesename,jdbcType=VARCHAR}
+				,
+		#{apartmentname,jdbcType=VARCHAR}
+				
+	)
+	</insert>
+
+	<update id="update" parameterType="com.ognice.domain.Preuser">
+		update `preuser`
+		<set>
+		<if test="id != null and id!=''">
+		`id`= #{id,jdbcType=INTEGER},
+		</if>
+		<if test="username != null and username!=''">
+		`username`= #{username,jdbcType=VARCHAR},
+		</if>
+		<if test="name != null and name!=''">
+		`name`= #{name,jdbcType=VARCHAR},
+		</if>
+		<if test="psw != null and psw!=''">
+		`psw`= #{psw,jdbcType=VARCHAR},
+		</if>
+		<if test="apartmentid != null and apartmentid!=''">
+		`apartmentid`= #{apartmentid,jdbcType=INTEGER},
+		</if>
+		<if test="jueseid != null and jueseid!=''">
+		`jueseid`= #{jueseid,jdbcType=INTEGER},
+		</if>
+		<if test="juesename != null and juesename!=''">
+		`juesename`= #{juesename,jdbcType=VARCHAR},
+		</if>
+		<if test="apartmentname != null and apartmentname!=''">
+		`apartmentname`= #{apartmentname,jdbcType=VARCHAR},
+		</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>

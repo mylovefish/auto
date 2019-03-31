@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ognice.dao.CommentMapper">
+	<resultMap id="BaseResultMap" type="com.ognice.domain.Comment">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="preuserid" property="preuserid" jdbcType="INTEGER" />
+		<result column="created" property="created" jdbcType="TIMESTAMP" />
+		<result column="parent" property="parent" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		`id`
+		,
+		`content`
+		,
+		`preuserid`
+		,
+		`created`
+		,
+		`parent`
+		
+	</sql>
+	<select id="selectCommentById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from `comment` where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="page" parameterType="com.ognice.controller.common.PageSearchParam" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from `comment` where 1=1
+		<if test="params!=null">
+		<if test="params.id !=null ">
+		AND `id` = #{params.id}
+		</if>
+		<if test="params.content !=null and params.content!=''">
+		 AND `content` like concat('%',#{params.content},'%')
+		</if>
+		<if test="params.preuserid !=null ">
+		AND `preuserid` = #{params.preuserid}
+		</if>
+		<if test="params.created !=null ">
+		AND `created` = #{params.created}
+		</if>
+		<if test="params.parent !=null ">
+		AND `parent` = #{params.parent}
+		</if>
+		</if>
+		order by id desc
+		<if test="page!=null"> limit #{page},#{pagesize}
+		</if>
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Integer"> delete from `comment` where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"  parameterType="com.ognice.domain.Comment"> insert into `comment` (
+		`id`
+				,
+		`content`
+				,
+		`preuserid`
+				,
+		`created`
+				,
+		`parent`
+				
+	) values (
+		#{id,jdbcType=INTEGER}
+				,
+		#{content,jdbcType=VARCHAR}
+				,
+		#{preuserid,jdbcType=INTEGER}
+				,
+		#{created,jdbcType=TIMESTAMP}
+				,
+		#{parent,jdbcType=INTEGER}
+				
+	)
+	</insert>
+
+	<update id="update" parameterType="com.ognice.domain.Comment">
+		update `comment`
+		<set>
+		<if test="id != null and id!=''">
+		`id`= #{id,jdbcType=INTEGER},
+		</if>
+		<if test="content != null and content!=''">
+		`content`= #{content,jdbcType=VARCHAR},
+		</if>
+		<if test="preuserid != null and preuserid!=''">
+		`preuserid`= #{preuserid,jdbcType=INTEGER},
+		</if>
+		<if test="created != null and created!=''">
+		`created`= #{created,jdbcType=TIMESTAMP},
+		</if>
+		<if test="parent != null and parent!=''">
+		`parent`= #{parent,jdbcType=INTEGER},
+		</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>
